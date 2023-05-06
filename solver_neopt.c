@@ -63,7 +63,7 @@ double* my_solver(int N, double *A, double* B) {
 	// A[i][j] = At[j][i]
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
-      		for (k = i; k < N; k++) {
+      		for (k = 0; k <= i; k++) {
 				// era At[k][j] => inversez cu A[j][k]
 				// At - inferior triunghiulara
 				AxBxAt[i * N + j] += AxB[i * N + k] * At[k * N + j];
@@ -91,5 +91,8 @@ double* my_solver(int N, double *A, double* B) {
 
 	free(AxB);
 	free(BtxBt);
+	free(At);
+	free(Bt);
+
 	return AxBxAt;
 }
