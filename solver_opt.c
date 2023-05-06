@@ -43,31 +43,39 @@ double* my_solver(int N, double *A, double* B) {
 	// (AxB)xAt
 	// A - superior triunghiulara => At - inferior triunghiulara
 	// A[i][j] = At[j][i]
+	register double *pAxBxAt = &AxBxAt[0];
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
+			register double sum = 0;
       		for (k = j; k < N; k++) {
 				// era At[k][j] => inversez cu A[j][k]
 				// At - inferior triunghiulara
-				AxBxAt[i * N + j] += AxB[i * N + k] * A[j * N + k];
+				sum += AxB[i * N + k] * A[j * N + k];
       		}
+			*pAxBxAt++ = sum;
 		}
 	}
 
 	// Bt×Bt
 	// B[i][j] = Bt[j][i]
+	register double *pBtxBt = &BtxBt[0];
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
+			register double sum = 0;
       		for (k = 0; k < N; k++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
-				BtxBt[i * N + j] += B[k * N + i] * B[j * N + k];
+				sum += B[k * N + i] * B[j * N + k];
       		}
+			*pBtxBt++ = sum;
 		}
 	}
 
 	// C = (AxBxAt) + (BtxBt)
+	pAxBxAt = &AxBxAt[0];
+	pBtxBt = &BtxBt[0];
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
-			AxBxAt[i * N + j] += BtxBt[i * N + j];
+			*pAxBxAt++ += *pBtxBt++;
 		}
 	}
 
