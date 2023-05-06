@@ -36,9 +36,9 @@ double* my_solver(int N, double *A, double* B) {
 	// 	}
 	// }
 
-	for (bi = 0; bi < n; bi += blockSize) {
-        for (bj = 0; bj < n; bj += blockSize) {
-            for (bk = 0; bk < n; bk += blockSize) {
+	for (bi = 0; bi < N; bi += blockSize) {
+        for (bj = 0; bj < N; bj += blockSize) {
+            for (bk = 0; bk < N; bk += blockSize) {
                 for (i = 0; i < blockSize; i++) {
                     for (j = 0; j < blockSize; j++) {
                         for (k = 0; k < blockSize; k++) {
