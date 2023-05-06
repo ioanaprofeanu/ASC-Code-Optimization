@@ -23,30 +23,8 @@ double* my_solver(int N, double *A, double* B) {
 	if (BtxBt == NULL) {
 		perror("calloc BtxBt failed");
 	}
-	double *At = calloc(N * N, sizeof(double));
-	if (At == NULL) {
-		perror("calloc BtxBt failed");
-	}
-	double *Bt = calloc(N * N, sizeof(double));
-	if (Bt == NULL) {
-		perror("calloc BtxBt failed");
-	}
 
 	int i,j,k;
-
-	// At
-	for (i = 0; i < N; i++) {
-   		for (j = i; j < N; j++) {
-	  		At[j * N + i] = A[i * N + j];
-   		}
-	}
-
-	// Bt
-	for (i = 0; i < N; i++) {
-   		for (j = 0; j < N; j++) {
-	  		Bt[j * N + i] = B[i * N + j];
-   		}
-	}
 
 	// A×B
 	// A - superior triunghiulara
@@ -58,6 +36,7 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
+
 	// (AxB)xAt
 	// A - superior triunghiulara => At - inferior triunghiulara
 	// A[i][j] = At[j][i]
@@ -66,7 +45,7 @@ double* my_solver(int N, double *A, double* B) {
       		for (k = j; k < N; k++) {
 				// era At[k][j] => inversez cu A[j][k]
 				// At - inferior triunghiulara
-				AxBxAt[i * N + j] += AxB[i * N + k] * At[k * N + j];
+				AxBxAt[i * N + j] += AxB[i * N + k] * A[j * N + k];
       		}
 		}
 	}
@@ -77,7 +56,7 @@ double* my_solver(int N, double *A, double* B) {
    		for (j = 0; j < N; j++) {
       		for (k = 0; k < N; k++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
-				BtxBt[i * N + j] += Bt[i * N + k] * Bt[k * N + j];
+				BtxBt[i * N + j] += B[k * N + i] * B[j * N + k];
       		}
 		}
 	}
@@ -91,8 +70,5 @@ double* my_solver(int N, double *A, double* B) {
 
 	free(AxB);
 	free(BtxBt);
-	free(At);
-	free(Bt);
-
 	return AxBxAt;
 }
