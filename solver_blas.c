@@ -2,6 +2,7 @@
  * Tema 2 ASC
  * 2023 Spring
  */
+#include <string.h>
 #include "utils.h"
 #include "cblas.h"
 
@@ -12,8 +13,6 @@ double* my_solver(int N, double *A, double *B) {
 	printf("BLAS SOLVER\n");
 	// C = (AxB)xAt + (BtxBt)
 	double *result = calloc(N * N, sizeof(double));
-
-	int i,j,k;
 
 	// A×B
 	// A - superior triunghiulara
