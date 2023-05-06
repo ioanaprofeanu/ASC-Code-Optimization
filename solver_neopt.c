@@ -12,8 +12,17 @@ double* my_solver(int N, double *A, double* B) {
 
 	// C=A×B×At+Bt×Bt
 	double *AxB = calloc(N * N, sizeof(double));
+	if (AxB == NULL) {
+		perror("calloc AxB failed");
+	}
 	double *AxBxAt = calloc(N * N, sizeof(double));
+	if (AxBxAt == NULL) {
+		perror("calloc AxBxAt failed");
+	}
 	double *BtxBt = calloc(N * N, sizeof(double));
+	if (BtxBt == NULL) {
+		perror("calloc BtxBt failed");
+	}
 
 	int i,j,k;
 
