@@ -24,15 +24,18 @@ double* my_solver(int N, double *A, double* B) {
 		perror("calloc BtxBt failed");
 	}
 
-	int i,j,k;
+	register int i,j,k;
 
 	// A×B
 	// A - superior triunghiulara
+	register double *pAxB = &AxB[0];
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
+			register double sum = 0;
       		for (k = i; k < N; k++) {
-				AxB[i * N + j] += A[i * N + k] * B[k * N + j];
+				sum += A[i * N + k] * B[k * N + j];
       		}
+			*pAxB++ = sum;
 		}
 	}
 
