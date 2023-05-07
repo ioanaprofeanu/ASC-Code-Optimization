@@ -30,9 +30,9 @@ double* my_solver(int N, double *A, double* B) {
 	// A - superior triunghiulara
 	register double *pAxB = &AxB[0];
 	for (i = 0; i < N; i++) {
-   		for (j = 0; j < N; j++) {
+		for (k = i; k < N; k++) {
 			register double sum = 0;
-      		for (k = i; k < N; k++) {
+      		for (j = 0; j < N; j++) {
 				sum += A[i * N + k] * B[k * N + j];
       		}
 			*pAxB++ = sum;
