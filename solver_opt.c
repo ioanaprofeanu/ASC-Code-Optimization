@@ -52,10 +52,14 @@ double* my_solver(int N, double *A, double* B) {
 	for (i = 0; i < N; i++) {
    		for (j = 0; j < N; j++) {
 			register double sum = 0;
+			double register *pAxB = &AxB[i * N];
+			double register *pA = &A[j * N + j];
       		for (k = j; k < N; k++) {
 				// era At[k][j] => inversez cu A[j][k]
 				// At - inferior triunghiulara
-				sum += AxB[i * N + k] * A[j * N + k];
+				sum += *pAxB * *pA;
+				pAxB++;
+				pA++;
       		}
 			*pAxBxAt++ = sum;
 		}
@@ -65,16 +69,11 @@ double* my_solver(int N, double *A, double* B) {
 	// B[i][j] = Bt[j][i]
 	register double *pBtxBt = &BtxBt[0];
 	for (i = 0; i < N; i++) {
-		register double *orig_pBt1 = &B[i];
    		for (j = 0; j < N; j++) {
 			register double sum = 0;
-			register double *pBt1 = orig_pBt1;
-			register double *pBt2 = &B[j * N + j];
       		for (k = 0; k < N; k++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
-				sum += *pBt1 * *pBt2;
-				pBt1 += N;
-				pBt2 ++;
+				sum += B[k * N + i] * B[j * N + k];
       		}
 			*pBtxBt++ = sum;
 		}
