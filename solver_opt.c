@@ -60,6 +60,10 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
+	double *BtxBt = calloc(N * N, sizeof(double));
+	if (BtxBt == NULL) {
+		perror("calloc BtxBt failed");
+	}
 	// Bt×Bt
 	// B[i][j] = Bt[j][i]
 	register double *pBtxBt = &BtxBt[0];
