@@ -102,15 +102,17 @@
    semnificativ mai mici.
 -------------------------------------------------------------------------------
 * Analiza comparativă a performanței
-  - am folosit 7 teste cu N diferit, utilizând același seed pentru fiecare tip
-  de test, pentru a putea face o comparație cât mai corectă a timpilor de
-  execuție.
+  - am folosit 7 teste cu N diferit, intre 400 și 1600, utilizând același seed
+  pentru fiecare tip de test, pentru a putea face o comparație cât mai corectă
+  a timpilor de execuție.
   - din timpii de rulare și din grafice, se poate observa că cea mai eficientă
   metodă de calcul este cea folosind biblioteca BLAS, urmată de cea optimizată
   manual și apoi de cea neoptimizată.
   - având în vedere că blas folosește funcții optimizate pentru realizarea
   calculelor, era de așteptat ca aceasta să fie cea mai eficientă metodă,
-  timpul de rulare având o creștere aproximativ liniară în funcție de N.
+  timpul de rulare având o creștere aproximativ liniară în funcție de N, 
+  rămânând sub 2.2 secunde pentru toate testele efectuate, comparativ cu
+  28 secunde pentru opt si 80 secunde pentru neopt.
   - pe de altă parte, celelalte două variante au timpul de rulare cu o creștere
   inițial liniară (pentru valori mici ale lui N) urmată de o creștere
   aproape exponențială (vizibilă mai ales de la N = 1000 în sus); panta celor
