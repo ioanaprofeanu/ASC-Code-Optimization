@@ -24,8 +24,8 @@ double* my_solver(int N, double *A, double *B) {
 	double *left_result = matrix_allocate_memory(N);
 
 	// calculate AxB
-	// copy A into left_result to keep its value
-	cblas_dcopy(N * N, A, 1, left_result, 1);
+	// copy B into left_result to keep its value
+	cblas_dcopy(N * N, B, 1, left_result, 1);
 	// calculate AxB, taking into account that A is upper triangular
 	cblas_dtrmm(CblasRowMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, N, N, 1, A, N, left_result, N);
 
