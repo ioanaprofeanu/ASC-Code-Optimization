@@ -1,0 +1,19 @@
+[ioana.profeanu@nehalem-wn21 tema2-asc]$ valgrind --leak-check=full ./tema2_opt_m /export/asc/tema2/input_valgrind
+==1165312== Memcheck, a memory error detector
+==1165312== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==1165312== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==1165312== Command: ./tema2_opt_m /export/asc/tema2/input_valgrind
+==1165312==
+OPT SOLVER
+Run=./tema2_opt_m: N=400: Time=5.698496
+<<< Bonus=0p >>>
+==1165312==
+==1165312== HEAP SUMMARY:
+==1165312==     in use at exit: 0 bytes in 0 blocks
+==1165312==   total heap usage: 9 allocs, 9 frees, 6,409,812 bytes allocated
+==1165312==
+==1165312== All heap blocks were freed -- no leaks are possible
+==1165312==
+==1165312== For lists of detected and suppressed errors, rerun with: -s
+==1165312== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+[ioana.profeanu@nehalem-wn21 tema2-asc]$

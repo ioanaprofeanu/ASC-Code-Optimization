@@ -1,0 +1,84 @@
+## Profeanu Ioana, 333CA
+# Tema2 ASC - Tehnici de Optimizare de Cod
+-------------------------------------------------------------------------------
+* Descriere:
+  - Programul constă în implementarea a trei variante de calcul al unor calcule
+  de matrice, cu scopul de a determina cea mai eficientă metodă de calcul.
+  - Matricea de calculat este: C = A×B×At + Bt×Bt, unde A este superior
+  triunghiulară.
+-------------------------------------------------------------------------------
+* Neopt - varianta neoptimizată
+  - soluția constă în implementarea naivă a calculelor, fără a se folosi vreo
+  tehnică de optimizare.
+  - calculele s-au efectuat în ordine, calculându-se întâi AxB, apoi (AxB)xA,
+  urmat de calcului BtxBt și în final adunarea acestora.
+  - matricele au fost reprezentate ca vectori unidimensionali, stocați dinamic,
+  pentru a facilita liniaritatea datelor.
+  - pentru calculele transpuselor, nu s-a folosit o funcție de transpunere, ci
+  s-a considerat parcurgerea vectorului pe linie in loc de coloană, dacă
+  termenul transpus era pe prima poziție a calculului produsului, si pe linie
+  în loc de coloană dacă era pe a doua poziție (am folosit faptul ca A[i][j] =
+  = At[j][i]).
+  - în cazul calculelor cu matricea A, s-a folosit faptul că aceasta este o
+  matrice superior triunghiulară, deci elementele de sub diagonala principală
+  sunt 0, iar în calcule acestea nu au mai fost accesate (s-a folosit faptul că
+  A[i][j] = 0, dacă i > j).
+  - ordinea buclelor a fost i-j-k.
+-------------------------------------------------------------------------------
+* Opt_m - varianta optimizată manual
+   - soluția constă în optimizarea manuală a calculelor, pornind de la varianta
+   neoptimizată.
+   - oprimizarile aduse au fost următoarele:
+      - deși am păstrat aceeași ordine a buclelor, am utilizat o variabilă sum
+	  de tipul register, pentru a reduce numărul de accesări la memorie,
+	  lucru ce nu se întâmpla în cazul neoptimizat, deoarece se accesa constant
+	  elementul calculat al matricei.
+	  - 
+-------------------------------------------------------------------------------
+* Analiza comparativă a timpilor de execuție;
+  - Am folosit 7 teste cu N diferit, utilizând același seed pentru fiecare tip
+de test, pentru a putea face o comparație cât mai corectă a timpilor de
+execuție.
+  - Timpii de rulare opținuți și utilizați în reprezentarea grafică:
+	Neopt:
+
+	Run=./tema2_neopt: N=400: Time=1.122556
+	Run=./tema2_neopt: N=600: Time=3.827122
+	Run=./tema2_neopt: N=800: Time=9.431404
+	Run=./tema2_neopt: N=1000: Time=17.621264
+	Run=./tema2_neopt: N=1400: Time=29.161531
+	Run=./tema2_neopt: N=1400: Time=47.547817
+	Run=./tema2_neopt: N=1600: Time=80.351334
+
+	Opt_m:
+	Run=./tema2_opt_m: N=400: Time=0.360811
+	Run=./tema2_opt_m: N=600: Time=1.160232
+	Run=./tema2_opt_m: N=800: Time=3.530852
+	Run=./tema2_opt_m: N=1000: Time=6.578520
+	Run=./tema2_opt_m: N=1200: Time=9.491651
+	Run=./tema2_neopt: N=1400: Time=15.354237
+	Run=./tema2_neopt: N=1600: Time=27.640186
+
+	Blas:
+	Run=./tema2_blas: N=400: Time=0.039500
+	Run=./tema2_blas: N=600: Time=0.129867
+	Run=./tema2_blas: N=800: Time=0.283771
+	Run=./tema2_blas: N=1000: Time=0.558739
+	Run=./tema2_blas: N=1200: Time=0.950319
+	Run=./tema2_neopt: N=1400: Time=1.427198
+	Run=./tema2_neopt: N=1600: Time=2.170316
+
+  - Din timpii de rulare obținuți, se poate observa că cea mai eficientă metodă
+de calcul este cea folosind biblioteca BLAS, urmată de cea optimizată manual
+și apoi de cea neoptimizată.
+  - De asemenea, se poate observa că timpul de rulare crește exponențial odată
+cu creșterea valorii lui N. Acest lucru se datorează faptului că, în cazul în
+
+
+
+-------------------------------------------------------------------------------
+* Bibliografie:
+  - https://ocw.cs.pub.ro/courses/asc/laboratoare/05
+  - https://netlib.org/blas/cblas.h
+  - https://netlib.org/blas/
+-------------------------------------------------------------------------------
