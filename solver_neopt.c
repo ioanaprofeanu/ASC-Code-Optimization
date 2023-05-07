@@ -19,53 +19,59 @@ double *matrix_allocate_memory(int N)
 double* my_solver(int N, double *A, double* B) {
 	printf("NEOPT SOLVER\n");
 
-	// C=A×B×At+Bt×Bt
+	// calculate AxB
 	double *AxB = matrix_allocate_memory(N);
 
-	// A×B
-	// A - superior triunghiulara
 	for (int i = 0; i < N; i++) {
    		for (int j = 0; j < N; j++) {
-      		for (int k = i; k < N; k++) {
+			// take into account that A is upper triangular;
+			// we don't access the zeros
+	  		for (int k = i; k < N; k++) {
 				AxB[i * N + j] += A[i * N + k] * B[k * N + j];
-      		}
+	  		}
 		}
 	}
 
+	// calculate AxBxAt
 	double *AxBxAt = matrix_allocate_memory(N);
-	// (AxB)xAt
-	// A - superior triunghiulara => At - inferior triunghiulara
-	// A[i][j] = At[j][i]
+
 	for (int i = 0; i < N; i++) {
    		for (int j = 0; j < N; j++) {
-      		for (int k = j; k < N; k++) {
-				// era At[k][j] => inversez cu A[j][k]
-				// At - inferior triunghiulara
+			// take into account that A is upper triangular
+	  		for (int k = j; k < N; k++) {
+				// we should At[k][j], so we use A[j][k]
+				// to transverse the matrix
 				AxBxAt[i * N + j] += AxB[i * N + k] * A[j * N + k];
-      		}
+	  		}
 		}
 	}
 
+	// calculate BtxBt
 	double *BtxBt = matrix_allocate_memory(N);
-	// Bt×Bt
-	// B[i][j] = Bt[j][i]
+
 	for (int i = 0; i < N; i++) {
    		for (int j = 0; j < N; j++) {
-      		for (int k = 0; k < N; k++) {
-				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
+	  		for (int k = 0; k < N; k++) {
+				// we should have Bt[i][k] * Bt[k][j]; so we swich
+				// the indexes to transverse the matrices
 				BtxBt[i * N + j] += B[k * N + i] * B[j * N + k];
-      		}
+	  		}
 		}
 	}
 
-	// C = (AxBxAt) + (BtxBt)
+	// sum up the two sides of the calculus
+	// to get the final result
+	double *result = matrix_allocate_memory(N);
 	for (int i = 0; i < N; i++) {
    		for (int j = 0; j < N; j++) {
-			AxBxAt[i * N + j] += BtxBt[i * N + j];
+			result += AxBxAt[i * N + j] + BtxBt[i * N + j];
 		}
 	}
 
+	// free the memory
 	free(AxB);
 	free(BtxBt);
-	return AxBxAt;
+	free(AxBxAt);
+
+	return result;
 }
