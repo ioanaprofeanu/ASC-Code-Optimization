@@ -64,7 +64,7 @@ double* my_solver(int N, double *A, double* B) {
 	double *result = matrix_allocate_memory(N);
 	for (int i = 0; i < N; i++) {
    		for (int j = 0; j < N; j++) {
-			result += AxBxAt[i * N + j] + BtxBt[i * N + j];
+			result[i * N + j] += AxBxAt[i * N + j] + BtxBt[i * N + j];
 		}
 	}
 
