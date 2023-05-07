@@ -1,9 +1,9 @@
 ## Profeanu Ioana, 333CA
 # Tema2 ASC - Tehnici de Optimizare de Cod
 -------------------------------------------------------------------------------
-* Descriere:
-  - Programul constă în implementarea a trei variante de calcul al unor calcule
-  de matrice, cu scopul de a determina cea mai eficientă metodă de calcul.
+* Descriere
+  - Programul constă în implementarea a trei variante de calcul pentru operații
+  pe matrice, cu scopul de a determina cea mai eficientă metodă.
   - Matricea de calculat este: C = A×B×At + Bt×Bt, unde A este superior
   triunghiulară.
 -------------------------------------------------------------------------------
@@ -15,7 +15,7 @@
   - matricele au fost reprezentate ca vectori unidimensionali, stocați dinamic,
   pentru a facilita liniaritatea datelor.
   - pentru calculele transpuselor, nu s-a folosit o funcție de transpunere, ci
-  s-a considerat parcurgerea vectorului pe linie in loc de coloană, dacă
+  s-a considerat parcurgerea vectorului pe coloană in loc de linie, dacă
   termenul transpus era pe prima poziție a calculului produsului, si pe linie
   în loc de coloană dacă era pe a doua poziție (am folosit faptul ca A[i][j] =
   = At[j][i]).
@@ -26,58 +26,104 @@
   - ordinea buclelor a fost i-j-k.
 -------------------------------------------------------------------------------
 * Opt_m - varianta optimizată manual
-   - soluția constă în optimizarea manuală a calculelor, pornind de la varianta
+  - soluția constă în optimizarea manuală a calculelor, pornind de la varianta
    neoptimizată.
-   - oprimizarile aduse au fost următoarele:
-      - deși am păstrat aceeași ordine a buclelor, am utilizat o variabilă sum
+  - oprimizarile aduse au fost următoarele:
+    - deși am păstrat aceeași ordine a buclelor, am utilizat o variabilă sum
 	  de tipul register, pentru a reduce numărul de accesări la memorie,
 	  lucru ce nu se întâmpla în cazul neoptimizat, deoarece se accesa constant
 	  elementul calculat al matricei.
-	  - 
+	  - accesul la elementele matricelor se face exclusiv utilizând pointeri,
+	  scăzându-se numărul de calcule necesare accesului la celulele matricelor.
+	  - pointerii la matrice și variabila sum au fost declarați ca variabile de
+	  tipul registe.
+  - la fel ca și în varianta neoptimizată, se ține cont de faptul că A este
+   superior triunghiulară (deci se va sări utilizând pointerii peste elementele
+   care sunt 0) iar transpusele matricelor sunt calculate ad-hoc, prin
+   parcurgere de linie în loc de coloană.
 -------------------------------------------------------------------------------
-* Analiza comparativă a timpilor de execuție;
-  - Am folosit 7 teste cu N diferit, utilizând același seed pentru fiecare tip
-de test, pentru a putea face o comparație cât mai corectă a timpilor de
-execuție.
-  - Timpii de rulare opținuți și utilizați în reprezentarea grafică:
-	Neopt:
-
-	Run=./tema2_neopt: N=400: Time=1.122556
-	Run=./tema2_neopt: N=600: Time=3.827122
-	Run=./tema2_neopt: N=800: Time=9.431404
-	Run=./tema2_neopt: N=1000: Time=17.621264
-	Run=./tema2_neopt: N=1400: Time=29.161531
-	Run=./tema2_neopt: N=1400: Time=47.547817
-	Run=./tema2_neopt: N=1600: Time=80.351334
-
-	Opt_m:
-	Run=./tema2_opt_m: N=400: Time=0.360811
-	Run=./tema2_opt_m: N=600: Time=1.160232
-	Run=./tema2_opt_m: N=800: Time=3.530852
-	Run=./tema2_opt_m: N=1000: Time=6.578520
-	Run=./tema2_opt_m: N=1200: Time=9.491651
-	Run=./tema2_neopt: N=1400: Time=15.354237
-	Run=./tema2_neopt: N=1600: Time=27.640186
-
-	Blas:
-	Run=./tema2_blas: N=400: Time=0.039500
-	Run=./tema2_blas: N=600: Time=0.129867
-	Run=./tema2_blas: N=800: Time=0.283771
-	Run=./tema2_blas: N=1000: Time=0.558739
-	Run=./tema2_blas: N=1200: Time=0.950319
-	Run=./tema2_neopt: N=1400: Time=1.427198
-	Run=./tema2_neopt: N=1600: Time=2.170316
-
-  - Din timpii de rulare obținuți, se poate observa că cea mai eficientă metodă
-de calcul este cea folosind biblioteca BLAS, urmată de cea optimizată manual
-și apoi de cea neoptimizată.
-  - De asemenea, se poate observa că timpul de rulare crește exponențial odată
-cu creșterea valorii lui N. Acest lucru se datorează faptului că, în cazul în
-
-
-
+* Blas - varianta optimizată cu funcțiile din biblioteca BLAS
+  - pentru această soluție s-au folosit exclusiv funcții din biblioteca BLAS,
+  după cum urmează:
+    - pentru copierea datelor din A într-o variabilă auxiliară, s-a folosit
+	  funcția dcopy.
+	- pentru calculele ce utilizau A, s-a folosit dtrmm pentru a se ține cont
+	  de faptul că A este superior triunghiulară; s-a setat flag-ul de transpus
+	  pe true unde era cazul.
+	- pentru calculul de înmulțire a matricelor Bt x Bt, s-a folosit dgemm cu
+	  flag-ul de transpus setat pe true.
+	- pentru calculul sumei finale, s-a folosit daxpy.
+	- desi daxpy și dcopy sunt funcții de nivelul 1 (pentru vectori), le-am
+	putut utiliza deoarece matricele au fost reprezentate ca vectori. 
 -------------------------------------------------------------------------------
-* Bibliografie:
+* Analiza cachegrind
+  - 1. I refs - informații despre referințele la instrucțiuni:
+    - pentru blas, se observă un număr cu mult mai mic de referințe față de
+	celelalte două variante, însă numărul de misses este mai mare (16,556 vs
+	1,637), lucru ce ar putea fi cauzat de faptul că blas face mai multe
+	operații simultan.
+	- între varianta optimizată manual și cea neoptimizată, se observă că
+	numărul de referințe este de aproximativ 3 ori mai mare pentru varianta
+	neoptimizată, însă numărul de misses este egal.
+  - 2. D refs - informații despre referințele la date:
+    - din nou, se observă un număr semnificativ mai mic de referințe pentru
+	blas (94,122,668 vs 2,963,707,298 și 752,112,220), urmat de varianta
+	optimizată manual și cea neoptimizată, doar că de această dată numărul
+	de misses este mai mic pentru blas;
+	- un pattern similar ca la I refs se observă și aici pentru varianta
+	optimizată și cea neoptimizată, referințele la date pentru opt fiind de
+	4 ori mai mici decât pentru neopt.
+  - 3. LLs refs - informațiile despre referințele Last Level Cache:
+    - numărul de referințe este mai mic pentru blas, și aproximativ egal 
+	pentru restul; miss-rate-ul este însă aproximativ egal pentru toate cele 3
+	variante.
+  - 4. Branches:
+    - numărul de branches este mai mic penru blas, dar mispread-rate-ul este
+	mai mare decât pentru celelalte două variante (1.6% vs 0.4%)
+	- numărul de brances, mispredict-urile și mispread rate-ul sunt aproximativ
+	egale pentru celelalte două.
+  - LLi, LLd și LL missrate a fost aproximativ egal cu 0 pentru toate cele 3
+  variante.
+  
+  - Concluzii:
+    - numărul mai scăzut de I refs pentru varianta optimizată manual se
+	datorează faptului că accesul la elementele matricelor se face exclusiv
+	prin pointeri, deci nu se fac atât de multe operații pentru acces.
+	- numărul mai scăzut de D refs pentru opt are ca principală cauză
+	utilizarea registrelor, deoarece facilitează accesul la datele din memorie.
+	Similar, utilizarea variabilei de tip register sum a dus la un număr mai
+	mic de referințe la date, deoarece valoarea celulei nu mai trebuie adusă
+	de fiecare dată din memorie pentru a calcula o celulă din matricea
+	rezultat al produsului.
+   - valorile legate de branch-uri sunt aproximativ egale pentru neopt și opt
+   deoarece ambele variante implementează același algoritm de rezolvare.
+   - blas este de departe cea mai eficientă variantă, deoarece folosește
+   funcții optimizate pentru a realiza calculele, de aici și valorile
+   semnificativ mai mici.
+-------------------------------------------------------------------------------
+* Analiza comparativă a performanței
+  - am folosit 7 teste cu N diferit, utilizând același seed pentru fiecare tip
+  de test, pentru a putea face o comparație cât mai corectă a timpilor de
+  execuție.
+  - din timpii de rulare și din grafice, se poate observa că cea mai eficientă
+  metodă de calcul este cea folosind biblioteca BLAS, urmată de cea optimizată
+  manual și apoi de cea neoptimizată.
+  - având în vedere că blas folosește funcții optimizate pentru realizarea
+  calculelor, era de așteptat ca aceasta să fie cea mai eficientă metodă,
+  timpul de rulare având o creștere aproximativ liniară în funcție de N.
+  - pe de altă parte, celelalte două variante au timpul de rulare cu o creștere
+  inițial liniară (pentru valori mici ale lui N) urmată de o creștere
+  aproape exponențială (vizibilă mai ales de la N = 1000 în sus); panta celor
+  două este similară;
+  - cu toate astea, timpul de rulare pentru varianta optimizată manual este
+  vizibil mai mic, diferență vizibilă în special pentru valori mari ale lui N,
+  varianta optimizată fiind aproximativ 3 ori mai rapidă.
+  - putem spune deci că optimizarea manuală a codului a crescut eficiența
+  temporală semnificativ, mai ales luând în considerare faptul că ambele
+  respectă același algoritm, având aceeași complexitate O(n^3), însă în
+  continuare fiind semnificativ mai lentă decât varianta blas.
+-------------------------------------------------------------------------------
+* Bibliografie
   - https://ocw.cs.pub.ro/courses/asc/laboratoare/05
   - https://netlib.org/blas/cblas.h
   - https://netlib.org/blas/
