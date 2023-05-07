@@ -44,7 +44,6 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
-
 	// (AxB)xAt
 	// A - superior triunghiulara => At - inferior triunghiulara
 	// A[i][j] = At[j][i]
@@ -70,11 +69,16 @@ double* my_solver(int N, double *A, double* B) {
 	// B[i][j] = Bt[j][i]
 	register double *pBtxBt = &BtxBt[0];
 	for (i = 0; i < N; i++) {
+		register double *orig_pBt1 = &B[i];
    		for (j = 0; j < N; j++) {
 			register double sum = 0;
+			double register *pBt1 = orig_pBt1;
+			double register *pBt2 = &B[j * N];
       		for (k = 0; k < N; k++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
-				sum += B[k * N + i] * B[j * N + k];
+				sum += *pBt1 * *pBt2;
+				pBt1 += N;
+				pBt2++;
       		}
 			*pBtxBt++ = sum;
 		}
