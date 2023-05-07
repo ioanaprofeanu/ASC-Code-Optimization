@@ -66,11 +66,10 @@ double* my_solver(int N, double *A, double* B) {
 	register double *pBtxBt = &BtxBt[0];
 	for (i = 0; i < N; i++) {
 		register double *orig_pBt1 = &B[i];
-		register double *orig_pBt2 = &B[i * N];
    		for (j = 0; j < N; j++) {
 			register double sum = 0;
 			register double *pBt1 = orig_pBt1;
-			register double *pBt2 = orig_pBt2;
+			register double *pBt2 = &B[j * N + j];
       		for (k = 0; k < N; k++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
 				sum += *pBt1 * *pBt2;
