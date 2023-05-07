@@ -61,7 +61,7 @@ double* my_solver(int N, double *A, double* B) {
 			*pAxBxAt = 0;
 			// both pAxB and pA will move onto the next column
 	  		for (int k = j; k < N; k++, pAxB++, pA++) {
-				sum += *pAxB * *pA;
+				*pAxBxAt += *pAxB * *pA;
 	  		}
 			pAxBxAt++;
 		}
