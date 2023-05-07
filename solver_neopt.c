@@ -21,8 +21,6 @@ double* my_solver(int N, double *A, double* B) {
 
 	// C=A×B×At+Bt×Bt
 	double *AxB = matrix_allocate_memory(N);
-	double *AxBxAt = matrix_allocate_memory(N);
-	double *BtxBt = matrix_allocate_memory(N);
 
 	// A×B
 	// A - superior triunghiulara
@@ -34,6 +32,7 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
+	double *AxBxAt = matrix_allocate_memory(N);
 	// (AxB)xAt
 	// A - superior triunghiulara => At - inferior triunghiulara
 	// A[i][j] = At[j][i]
@@ -47,6 +46,7 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
+	double *BtxBt = matrix_allocate_memory(N);
 	// Bt×Bt
 	// B[i][j] = Bt[j][i]
 	for (int i = 0; i < N; i++) {

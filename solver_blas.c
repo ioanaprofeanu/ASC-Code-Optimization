@@ -21,19 +21,22 @@ double *matrix_allocate_memory(int N)
 double* my_solver(int N, double *A, double *B) {
 	printf("BLAS SOLVER\n");
 	// C = (AxB)xAt + (BtxBt)
-	double *result = matrix_allocate_memory(N);
+	double *left_result = matrix_allocate_memory(N);
 
 	// A×B
 	// A - superior triunghiulara
-	cblas_dcopy(N * N, A, 1, result, 1);
-	cblas_dtrmm(CblasRowMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, N, N, 1, A, N, result, N);
+	cblas_dcopy(N * N, A, 1, left_result, 1);
+	cblas_dtrmm(CblasRowMajor, CblasLeft, CblasUpper, CblasNoTrans, CblasNonUnit, N, N, 1, A, N, left_result, N);
 	
 	// (AxB)xAt
 	// A - superior triunghiulara
-	cblas_dtrmm(CblasRowMajor, CblasRight, CblasUpper, CblasTrans, CblasNonUnit, N, N, 1, A, N, result, N);
+	cblas_dtrmm(CblasRowMajor, CblasRight, CblasUpper, CblasTrans, CblasNonUnit, N, N, 1, A, N, left_result, N);
 	
+	double *right_result = matrix_allocate_memory(N);
 	// C = Bt×Bt + (AxB)xAt
-	cblas_dgemm(CblasRowMajor, CblasTrans, CblasTrans, N, N, N, 1, B, N, B, N, 1, result, N);
+	cblas_dgemm(CblasRowMajor, CblasTrans, CblasTrans, N, N, N, 1, B, N, B, N, 1, right_result, N);
 	
-	return result;
+	cblas_daxpy(N * N, 1, left_result, 1, right_result, 1);
+
+	return right_result;
 }

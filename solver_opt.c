@@ -21,8 +21,6 @@ double* my_solver(int N, double *A, double* B) {
 
 	// C=A×B×At+Bt×Bt
 	double *AxB = matrix_allocate_memory(N);
-	double *AxBxAt = matrix_allocate_memory(N);
-	double *BtxBt = matrix_allocate_memory(N);
 
 	// A×B
 	// A - superior triunghiulara
@@ -33,15 +31,14 @@ double* my_solver(int N, double *A, double* B) {
 			double *pA = orig_pA;
 			double *pB = &B[j + i * N];
 			register double sum = 0;
-      		for (register int k = i; k < N; k++) {
+      		for (register int k = i; k < N; k++, pA++, pB += N) {
 				sum += *pA * *pB;
-				pA++;
-				pB += N;
       		}
 			*pAxB++ = sum;
 		}
 	}
 
+	double *AxBxAt = matrix_allocate_memory(N);
 	// (AxB)xAt
 	// A - superior triunghiulara => At - inferior triunghiulara
 	// A[i][j] = At[j][i]
@@ -52,17 +49,16 @@ double* my_solver(int N, double *A, double* B) {
 			register double sum = 0;
 			double register *pAxB = orig_pAxB + j;
 			double register *pA = &A[j * N + j];
-      		for (register int k = j; k < N; k++) {
+      		for (register int k = j; k < N; k++, pAxB++, pA++) {
 				// era At[k][j] => inversez cu A[j][k]
 				// At - inferior triunghiulara
 				sum += *pAxB * *pA;
-				pAxB++;
-				pA++;
       		}
 			*pAxBxAt++ = sum;
 		}
 	}
 
+	double *BtxBt = matrix_allocate_memory(N);
 	// Bt×Bt
 	// B[i][j] = Bt[j][i]
 	register double *pBtxBt = &BtxBt[0];
@@ -72,11 +68,9 @@ double* my_solver(int N, double *A, double* B) {
 			register double sum = 0;
 			double register *pBt1 = orig_pBt1;
 			double register *pBt2 = &B[j * N];
-      		for (register int k = 0; k < N; k++) {
+      		for (register int k = 0; k < N; k++, pBt1 += N, pBt2++) {
 				// ar fi fost de fapt Bt[i][k] * Bt[k][j]; inversez
 				sum += *pBt1 * *pBt2;
-				pBt1 += N;
-				pBt2++;
       		}
 			*pBtxBt++ = sum;
 		}
