@@ -50,9 +50,10 @@ double* my_solver(int N, double *A, double* B) {
 	// A[i][j] = At[j][i]
 	register double *pAxBxAt = &AxBxAt[0];
 	for (i = 0; i < N; i++) {
+		register double *orig_pAxB = &AxB[i * N];
    		for (j = 0; j < N; j++) {
 			register double sum = 0;
-			double register *pAxB = &AxB[i * N];
+			double register *pAxB = orig_pAxB + j;
 			double register *pA = &A[j * N + j];
       		for (k = j; k < N; k++) {
 				// era At[k][j] => inversez cu A[j][k]
