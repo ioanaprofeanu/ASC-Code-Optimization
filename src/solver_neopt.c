@@ -1,4 +1,4 @@
-s/*
+/*
  * Tema 2 ASC
  * 2023 Spring
  */
