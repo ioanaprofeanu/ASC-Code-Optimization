@@ -4,6 +4,15 @@
  */
 #include "utils.h"
 
+double *matrix_allocate_memory(int N)
+{
+	double *matrix = calloc(N * N, sizeof(double));
+	if (matrix == NULL) {
+		perror("calloc failed");
+	}
+	return matrix;
+}
+
 /*
  * Add your optimized implementation here
  */
@@ -11,10 +20,9 @@ double* my_solver(int N, double *A, double* B) {
 	printf("OPT SOLVER\n");
 
 	// C=A×B×At+Bt×Bt
-	double *AxB = calloc(N * N, sizeof(double));
-	if (AxB == NULL) {
-		perror("calloc AxB failed");
-	}
+	double *AxB = matrix_allocate_memory(N);
+	double *AxBxAt = matrix_allocate_memory(N);
+	double *BtxBt = matrix_allocate_memory(N);
 
 	// A×B
 	// A - superior triunghiulara
@@ -32,11 +40,6 @@ double* my_solver(int N, double *A, double* B) {
       		}
 			*pAxB++ = sum;
 		}
-	}
-
-	double *AxBxAt = calloc(N * N, sizeof(double));
-	if (AxBxAt == NULL) {
-		perror("calloc AxBxAt failed");
 	}
 
 	// (AxB)xAt
@@ -60,10 +63,6 @@ double* my_solver(int N, double *A, double* B) {
 		}
 	}
 
-	double *BtxBt = calloc(N * N, sizeof(double));
-	if (BtxBt == NULL) {
-		perror("calloc BtxBt failed");
-	}
 	// Bt×Bt
 	// B[i][j] = Bt[j][i]
 	register double *pBtxBt = &BtxBt[0];
