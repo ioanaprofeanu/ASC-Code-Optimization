@@ -33,13 +33,13 @@ double* my_solver(int N, double *A, double* B) {
 			register double *pA = orig_pA;
 			register double *pB = orig_pB + j;
 			// initialize the sum
-			*pAxB = 0;
+			register double sum = 0;
 			// pA will move onto the next column, pB onto the next line
 			// take into account that A is upper triangular
 	  		for (int k = i; k < N; k++, pA++, pB += N) {
-				*pAxB += *pA * *pB;
+				sum += *pA * *pB;
 	  		}
-			pAxB++;
+			*pAxB++ = sum;
 		}
 	}
 
@@ -58,12 +58,12 @@ double* my_solver(int N, double *A, double* B) {
 			register double *pAxB = orig_pAxB + j;
 			// pA will skip j elements, because A is upper triangular
 			register double *pA = &A[j * N + j];
-			*pAxBxAt = 0;
+			register double sum = 0;
 			// both pAxB and pA will move onto the next column
 	  		for (int k = j; k < N; k++, pAxB++, pA++) {
-				*pAxBxAt += *pAxB * *pA;
+				sum += *pAxB * *pA;
 	  		}
-			pAxBxAt++;
+			*pAxBxAt++ = sum;
 		}
 	}
 
@@ -81,11 +81,12 @@ double* my_solver(int N, double *A, double* B) {
 			// they are the transposed version of B
 			register double *pBt1 = orig_pBt1;
 			register double *pBt2 = &B[j * N];
+			register double sum = 0;
 			// pBt1 will move onto the next line, pBt2 onto the next column
 	  		for (int k = 0; k < N; k++, pBt1 += N, pBt2++) {
-				*pBtxBt += *pBt1 * *pBt2;
+				sum += *pBt1 * *pBt2;
 	  		}
-			pBtxBt++;
+			*pBtxBt++ = sum;
 		}
 	}
 
