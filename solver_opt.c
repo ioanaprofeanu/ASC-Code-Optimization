@@ -27,7 +27,7 @@ double* my_solver(int N, double *A, double* B) {
 		// reference to the origin of the line, to avoid computing it
 		// multiple times in the inner loop
 		register double *orig_pA = &A[i * N + i];
-		register double *orig_pB = &B[i * N]
+		register double *orig_pB = &B[i * N];
    		for (int j = 0; j < N; j++) {
 			// reference to the current element
 			register double *pA = orig_pA;
